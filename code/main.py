@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-algo', '--algorithm', required=True, help='The algorithm you want to run (cheq, core, c-core, bcf, c-bcf, rl, redq)')
+    parser.add_argument('-algo', '--algorithm', default="cheq", help='The algorithm you want to run (cheq, core, c-core, bcf, c-bcf, rl, redq)')
     parser.add_argument('-rname', '--run-name', help='The name of the run. Defaults to the algorithm name.')
     parser.add_argument('-train-start', '--train-start', type=int, default=1000, help='When the training begins.')
     parser.add_argument('-start-steps', '--start_steps', type=int, default=5000, help='When the algorithm starts completely.')
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     parser.add_argument('-lam-low', '--lambda-low', type=float, default=0.2, help='Lambda low for CHEQ')
     parser.add_argument('-lam-warm', '--lambda-warmup', type=float, default=0.3, help='Warmup lambda for C-variants.')
     parser.add_argument('-pfreq', '--policy-frequency', type=int, default=2, help='The policy update frequency.')
-    parser.add_argument('-G', '--update-steps', type=int, default=1, help='Number of Q-updates per environment step (REDQ, CHEQ).')
+    parser.add_argument('-G', '--update-steps', type=int, default=20, help='Number of Q-updates per environment step (REDQ, CHEQ).')
 
     args = parser.parse_args()
 

@@ -87,6 +87,7 @@ def load_track(path: str):
 
 def load_tracks(tracks_dir: str):
     tracks = []
+    tracks_dir = "/home/artur/Schreibtisch/cheq/code/"+tracks_dir
     track_paths = os.listdir(tracks_dir)
     for track_path in track_paths:
         tracks.append(load_track(os.path.join(tracks_dir, track_path)))
