@@ -19,7 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('-train-start', '--train-start', type=int, default=1000, help='When the training begins.')
     parser.add_argument('-start-steps', '--start_steps', type=int, default=5000, help='When the algorithm starts completely.')
     parser.add_argument('-exp', '--exp-type', help='exp-type for better structuring of the experiments. Defaults to the env.')
-    parser.add_argument('-env', '--environment', default='racing', help='The environment you want to run (racing, cartpole)')
+    parser.add_argument('-env', '--environment', default='cartpole', help='The environment you want to run (racing, cartpole)')
     parser.add_argument('-steps', '--training-steps', type=int, default=int(1.5e6), help='The number of training steps.')
     parser.add_argument('-seed', '--seed', type=int, default=0, help='The training run seed.')
     parser.add_argument('-ens-size', '--ensemble-size', type=int,  default=5, help='The size of the ensemble used (res-ada, bcf, redq)')

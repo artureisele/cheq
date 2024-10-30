@@ -38,3 +38,4 @@ settings
 appmap.log
 logs/
 launch.json
+outputs/

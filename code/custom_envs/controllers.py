@@ -247,12 +247,13 @@ class CustomCarRacingController(Controller):
 
 class CartPoleController(Controller):
 
-    def __init__(self, obs_man: CartPoleObservationManager, place_poles=False, K=None):
+    def __init__(self, obs_man: CartPoleObservationManager, device = None, place_poles=False, K=None):
         super(CartPoleController, self).__init__(obs_man=obs_man)
-
+        self.device = torch.device(device)
         env = gym.make('CustomCartPole-v1')
         cartpole = ct.NonlinearIOSystem(env.unwrapped.ct_sys_update, env.unwrapped.ct_sys_output, states=4, name='cartpole',
                                         inputs=['action'], outputs=['x', 'x_dot', 'theta', 'theta_dot'])
+        self.goal_state =  env.unwrapped.goal_state
         linsys = cartpole.linearize(x0=env.unwrapped.goal_state, u0=np.array([0.]))
         linsys_d = linsys.sample(env.unwrapped.tau)
 
@@ -294,7 +295,8 @@ class CartPoleController(Controller):
         return output
 
     def get_action(self, state, greedy=True):
-        return self.forward(state)
+        error = state - torch.tensor(self.goal_state, dtype=torch.float32, device=self.device)
+        return self.forward(error)
 
 
 class SillyCartPoleController(Controller):

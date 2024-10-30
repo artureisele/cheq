@@ -1,0 +1,52 @@
+env: 
+  env_id: 'CustomCartPole-v1'
+  make_env_function:
+    type: ???
+    env_id: 'CustomCartPole-v1'
+  evaluator:
+    type: ???
+  controller: 
+    type: ???
+  observation_manager: 
+    type: ???
+training:
+  agent_trainer:
+    type: ???
+    hidden_layer_size_q : 64
+    hidden_layer_size_actor : 16
+    ensemble_size: 3
+    bernoulli_mask_coeff: 0.8
+    use_rpf: False
+    pi_update_avg_q: True
+    learning_starts: 1000
+    q_lr: 0.0003
+    update_steps: 20
+    policy_frequency: 2
+
+  number_steps: 1500000
+  device: 'cuda:0'
+  seed: 0
+  weight_scheduler: 
+    type: ???
+    lambda_min: 0.2
+    lambda_max: 1.0
+    t_start: 5000
+    u_high: 0.15
+    u_low: 0.03
+    window_size: 1
+    lambda_warmup_max: 0.3
+  uncertainty_evaluator:
+    type: ???
+evaluation: 
+  eval_agent: True
+  eval_count: 10
+  eval_frequency: 20
+logging:
+  wandb_project_name: 'CHEQ-RLC-2024'
+  capture_video: True
+  model_save_frequency: 5000
+entry_point:
+  type: ???
+run_name: 'redq'
+exp_type: 'cartpole'
+

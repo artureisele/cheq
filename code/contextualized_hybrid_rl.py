@@ -5,7 +5,8 @@ import torch
 
 import wandb
 import gymnasium as gym
-
+import hydra
+from omegaconf import DictConfig, OmegaConf
 from agents import MixedAgent
 from custom_envs.observation_manager import Algorithm
 from utils.logger import Logger
@@ -73,7 +74,7 @@ def train(config):
     logger = Logger(run_name=run_name, exp_name=exp_type)
     plotter = Plotter(logger, augmented_env=augmented_env)
 
-    controller = env_config['controller']['type'](obs_man=obs_man, **get_kwargs(env_config['controller'])).to(device)
+    controller = env_config['controller']['type'](obs_man=obs_man,device = device, **get_kwargs(env_config['controller'])).to(device)
 
     mixed_agent = MixedAgent(agent_trainer.agent, controller, obs_man=obs_man)
 

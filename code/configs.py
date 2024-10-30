@@ -15,7 +15,7 @@ from utils.tools import QEnsembleSTDUncertaintyEvaluator, MovingAVGLinearWeightS
 LOGGING = {
     'wandb_project_name': 'CHEQ-RLC-2024',
     'capture_video': True,
-    'model_save_frequency': 50000
+    'model_save_frequency': 5000
 }
 
 EVALUATION = {

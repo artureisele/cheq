@@ -66,7 +66,7 @@ class CartPoleEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         self.survival_bias = 100
 
         # Goal state
-        self.goal_state = np.array([0, 0, 0, 0])  # for x, x_dot, theta, theta_dot
+        self.goal_state = np.array([0, 0, 0, 0])  # for x, x_dot, theta, theta_dot, changing x will modify environmnet and controller to learn new setpoint
 
         self.steps_beyond_terminated = None
 
@@ -84,7 +84,8 @@ class CartPoleEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             # If action is a scalar, apply np.clip() directly
             force = action
 
-        state_diff = (self.goal_state - state)**2
+        #TODO: Modify to have different reward function for RL part then prior controller
+        state_diff = (np.array([2, 0, 0, 0]) - state)**2
         state_cost = np.sum(state_diff * np.array([self.cost_x, self.cost_x_dot, self.cost_theta, self.cost_theta_dot]))
         reward = self.survival_bias - force**2 * self.cost_control - state_cost
 
@@ -116,6 +117,10 @@ class CartPoleEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
 
         self.theta_ddot_old = theta_ddot
 
+        x_dot = x_dot if np.isscalar(x_dot) else x_dot.item()
+        x_ddot = x_ddot if np.isscalar(x_ddot) else x_ddot.item()
+        theta_dot = theta_dot if np.isscalar(theta_dot) else theta_dot.item()
+        theta_ddot = theta_ddot if np.isscalar(theta_ddot) else theta_ddot.item()
         state_dot = np.array([x_dot, x_ddot, theta_dot, theta_ddot])
         return state_dot
 
