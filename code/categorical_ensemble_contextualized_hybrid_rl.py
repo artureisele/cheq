@@ -56,7 +56,7 @@ def train(config):
 
     agent_trainer = train_config['agent_trainer']['type'](envs, obs_man, device,
                                                           **get_kwargs(train_config['agent_trainer']))
-
+    agent_trainer.agent.get_ensemble_epistemic_uncertainty(torch.tensor([[0,0,0,0,0],[0,0,0,0,1]],device="cuda:0",dtype=torch.float32),torch.tensor([ envs.action_space.sample()[0],envs.action_space.sample()[0]],device="cuda:0",dtype=torch.float32))
     timestamp = datetime.now().strftime('%y%m%d_%H%M%S')
 
     # name prefix of output files
@@ -135,8 +135,7 @@ def train(config):
         real_next_obs = inject_weight_into_state(next_obs, mixing_component) if augmented_env else next_obs.copy()
 
         # compute the uncertainty for the next timestep
-        uncertainty = uncertainty_evaluator.get_uncertainty(state=obs_man.get_rl_state(state), action=actions_pi,
-                                                            state_next=obs_man.get_rl_state(real_next_obs), reward=rewards[0])
+        uncertainty = agent_trainer.agent.get_ensemble_epistemic_uncertainty(torch.tensor(obs_man.get_rl_state(state),device="cuda:0"), action=torch.tensor(actions_pi,device="cuda:0"))
         weight_scheduler.adapt_weight(uncertainty, global_step)
 
         uncertainties.append(uncertainty)
@@ -144,7 +143,6 @@ def train(config):
         episode_actions_c.append(actions_c)
         for terminated in terminations:
             if terminated:
-                print("FAIL!!!!!")
                 no_fails = no_fails + 1 
         wandb.log({
             "rollout/step_lambda": mixing_component,
@@ -157,7 +155,6 @@ def train(config):
                 #if info['episode']['l'] < 600:  # fail criterion for Car Racing Environment
                     #no_fails += 1
 
-                print(no_fails)
                 wandb.log(
                     {"rollout/episodic_return": info["episode"]["r"],
                      "rollout/episodic_length": info["episode"]["l"],

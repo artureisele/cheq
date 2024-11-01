@@ -31,6 +31,13 @@ def seed_experiment(seed):
         torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
 
+def calc_cvar_differentiable(q_probs_average, atoms, batch_size, risk):
+    atoms = atoms.repeat(batch_size,1)
+    assert q_probs_average.shape == atoms.shape #batchsize x atoms
+    cdf = torch.cumsum(q_probs_average, axis=-1)
+    cdf_clipped = torch.clip(cdf, 0, 1-risk)
+    pdf_clipped = torch.diff(torch.concatenate([torch.zeros_like(cdf_clipped[..., :1]), cdf_clipped], axis=-1),axis=-1) /(1 - risk)
+    return torch.sum(pdf_clipped*atoms, axis=-1)
 
 def convert_to_tensor(data, device):
 
@@ -478,7 +485,6 @@ class BernoulliMaskReplayBuffer(ReplayBuffer):
 
         )
         return BernoulliMaskReplayBufferSamples(*tuple(map(self.to_torch, data)))
-
 
 
 

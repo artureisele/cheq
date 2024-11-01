@@ -8,7 +8,8 @@ from custom_envs.controllers import CartPoleController, LinearGainScheduleRacing
 from simple_rl_baseline import train as train_rl
 from hybrid_rl import train as train_ada_rl
 from contextualized_hybrid_rl import train as train_apr
-from sac_trainer import SACTrainer
+from categorical_ensemble_contextualized_hybrid_rl import train as categorical_train_apr
+from sac_trainer import SACTrainer, CategoricalSACTrainer
 
 from utils.tools import QEnsembleSTDUncertaintyEvaluator, MovingAVGLinearWeightScheduler, TargetTDErrorUncertaintyEvaluator
 
@@ -21,8 +22,8 @@ def fill_cfg_with_functions(cfg: DictConfig)-> DictConfig:
     cfg["env"]["evaluator"]["type"] = CartPoleEvaluator
     cfg["env"]["controller"]["type"] =  CartPoleController
     cfg["env"]["observation_manager"]["type"] = CartPoleObservationManager
-    cfg["training"]["agent_trainer"]["type"] = SACTrainer
-    cfg["entry_point"]["type"] = train_apr
+    cfg["training"]["agent_trainer"]["type"] = CategoricalSACTrainer
+    cfg["entry_point"]["type"] = categorical_train_apr
     return cfg
 def get_kwargs(dict):
     """
